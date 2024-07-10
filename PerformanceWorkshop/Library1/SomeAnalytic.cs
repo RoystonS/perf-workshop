@@ -29,25 +29,29 @@ public class SomeAnalytic
     )
     {
         var locations = caseEvents
-            .Select(a => new TopCellInfo(
-                SiteName: a.StartSite,
-                Cgi: a.StartCGI,
-                RawId: !string.IsNullOrEmpty(caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.UniqueLookupCi)
-                    ? caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.UniqueLookupCi
-                    : caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.RawCi?.ToString() ?? "",
-                Postcode: a.StartPostcode
-            ))
+            .Select(a =>
+            {
+                var cell = caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI);
+                return new TopCellInfo(
+                    SiteName: a.StartSite,
+                    Cgi: a.StartCGI,
+                    RawId: !string.IsNullOrEmpty(cell?.UniqueLookupCi) ? cell.UniqueLookupCi : cell?.RawCi?.ToString() ?? "",
+                    Postcode: a.StartPostcode
+                );
+            })
             .ToList();
 
         var end = caseEvents
-            .Select(a => new TopCellInfo(
-                SiteName: a.EndSite,
-                Cgi: a.EndCGI,
-                RawId: !string.IsNullOrEmpty(caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.UniqueLookupCi)
-                    ? caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.UniqueLookupCi
-                    : caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.RawCi?.ToString() ?? "",
-                Postcode: a.EndPostcode
-            ))
+            .Select(a =>
+            {
+                var cell = caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI);
+                return new TopCellInfo(
+                    SiteName: a.EndSite,
+                    Cgi: a.EndCGI,
+                    RawId: !string.IsNullOrEmpty(cell?.UniqueLookupCi) ? cell.UniqueLookupCi : (cell?.RawCi?.ToString() ?? ""),
+                    Postcode: a.EndPostcode
+                );
+            })
             .ToList();
 
         locations.AddRange(end);
