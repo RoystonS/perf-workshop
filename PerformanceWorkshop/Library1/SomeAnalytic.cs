@@ -28,9 +28,11 @@ public class SomeAnalytic
         List<CaseLocationDTO> caseLocations
     )
     {
+        var locationsByCgi = caseLocations.ToDictionary(l => l.Cgi);
+
         CaseLocationDTO? LookupCellByCGI(string? cgi)
         {
-            return caseLocations.FirstOrDefault(x => x.Cgi == cgi);
+            return cgi == null ? null : locationsByCgi[cgi];
         }
 
         var locations = caseEvents
