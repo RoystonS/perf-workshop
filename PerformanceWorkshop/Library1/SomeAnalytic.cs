@@ -24,8 +24,8 @@ public class SomeAnalytic
 
     public List<TopCellInfo> ComputeTopCells(
         CellsToDisplayEnum cellCount,
-        List<CaseEventDTO> caseEvents,
-        List<CaseLocationDTO> caseLocations
+        IEnumerable<CaseEventDTO> caseEvents,
+        IEnumerable<CaseLocationDTO> caseLocations
     )
     {
         var locationsByCgi = new Dictionary<string, CaseLocationDTO>();
@@ -50,22 +50,19 @@ public class SomeAnalytic
                     Postcode: a.StartPostcode
                 );
             })
+            .Concat(
+                caseEvents.Select(a =>
+                {
+                    var cell = LookupCellByCGI(a.EndCGI);
+                    return new TopCellInfo(
+                        SiteName: a.EndSite,
+                        Cgi: a.EndCGI,
+                        RawId: !string.IsNullOrEmpty(cell?.UniqueLookupCi) ? cell.UniqueLookupCi : (cell?.RawCi?.ToString() ?? ""),
+                        Postcode: a.EndPostcode
+                    );
+                })
+            )
             .ToList();
-
-        var end = caseEvents
-            .Select(a =>
-            {
-                var cell = LookupCellByCGI(a.EndCGI);
-                return new TopCellInfo(
-                    SiteName: a.EndSite,
-                    Cgi: a.EndCGI,
-                    RawId: !string.IsNullOrEmpty(cell?.UniqueLookupCi) ? cell.UniqueLookupCi : (cell?.RawCi?.ToString() ?? ""),
-                    Postcode: a.EndPostcode
-                );
-            })
-            .ToList();
-
-        locations.AddRange(end);
 
         var cells = locations
             .Where(l => !string.IsNullOrWhiteSpace(l.Cgi))
