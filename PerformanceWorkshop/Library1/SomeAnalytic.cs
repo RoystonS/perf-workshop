@@ -28,10 +28,15 @@ public class SomeAnalytic
         List<CaseLocationDTO> caseLocations
     )
     {
+        CaseLocationDTO? LookupCellByCGI(string? cgi)
+        {
+            return caseLocations.FirstOrDefault(x => x.Cgi == cgi);
+        }
+
         var locations = caseEvents
             .Select(a =>
             {
-                var cell = caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI);
+                var cell = LookupCellByCGI(a.StartCGI);
                 return new TopCellInfo(
                     SiteName: a.StartSite,
                     Cgi: a.StartCGI,
@@ -44,7 +49,7 @@ public class SomeAnalytic
         var end = caseEvents
             .Select(a =>
             {
-                var cell = caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI);
+                var cell = LookupCellByCGI(a.EndCGI);
                 return new TopCellInfo(
                     SiteName: a.EndSite,
                     Cgi: a.EndCGI,
