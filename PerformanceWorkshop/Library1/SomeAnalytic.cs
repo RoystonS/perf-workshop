@@ -53,10 +53,10 @@ public class SomeAnalytic
         locations.AddRange(end);
 
         var cells = locations
+            .Where(l => !string.IsNullOrWhiteSpace(l.Cgi))
             .GroupBy(a => new { a.Cgi, a.SiteName })
             .Select(g => new { Location = g.First(), Count = g.Count() })
             .OrderByDescending(a => a.Count)
-            .Where(a => !string.IsNullOrWhiteSpace(a.Location.Cgi))
             .Select(g => g.Location);
 
         if (cellCount == CellsToDisplayEnum.All)
