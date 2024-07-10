@@ -34,11 +34,7 @@ public class SomeAnalytic
                 Cgi: a.StartCGI,
                 RawId: !string.IsNullOrEmpty(caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.UniqueLookupCi)
                     ? caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.UniqueLookupCi
-                    : (
-                        caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.RawCi.HasValue == true
-                            ? caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.RawCi.Value.ToString()
-                            : ""
-                    ),
+                    : caseLocations.FirstOrDefault(x => x.Cgi == a.StartCGI)?.RawCi?.ToString() ?? "",
                 Postcode: a.StartPostcode
             ))
             .ToList();
@@ -49,11 +45,7 @@ public class SomeAnalytic
                 Cgi: a.EndCGI,
                 RawId: !string.IsNullOrEmpty(caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.UniqueLookupCi)
                     ? caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.UniqueLookupCi
-                    : (
-                        caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.RawCi.HasValue == true
-                            ? caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.RawCi.Value.ToString()
-                            : ""
-                    ),
+                    : caseLocations.FirstOrDefault(x => x.Cgi == a.EndCGI)?.RawCi?.ToString() ?? "",
                 Postcode: a.EndPostcode
             ))
             .ToList();
