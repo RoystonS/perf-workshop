@@ -28,7 +28,11 @@ public class SomeAnalytic
         List<CaseLocationDTO> caseLocations
     )
     {
-        var locationsByCgi = caseLocations.ToDictionary(l => l.Cgi);
+        var locationsByCgi = new Dictionary<string, CaseLocationDTO>();
+        foreach (var caseLocation in caseLocations)
+        {
+            locationsByCgi[caseLocation.Cgi] = caseLocation;
+        }
 
         CaseLocationDTO? LookupCellByCGI(string? cgi)
         {
